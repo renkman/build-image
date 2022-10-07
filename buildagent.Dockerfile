@@ -13,9 +13,9 @@ RUN apt-get update -y \
 
 # Install jsonnet
 ENV GO111MODULE="on"
-RUN go get github.com/google/go-jsonnet/cmd/jsonnet \
-    && go get github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb \
-    && go get github.com/brancz/gojsontoyaml \
+RUN go install github.com/google/go-jsonnet/cmd/jsonnet@latest \
+    && go install github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@latest \
+    && go install github.com/brancz/gojsontoyaml@latest \
     && rm -rf $GOPATH/{src,pkg}
 
 # Install awscli v2
