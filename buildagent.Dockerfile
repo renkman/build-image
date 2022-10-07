@@ -1,4 +1,4 @@
-FROM golang:1.14-buster
+FROM golang:1.19-buster
 
 ENV AWS_DEFAULT_REGION=eu-central-1 \
     DEBIAN_FRONTEND=noninteractive
@@ -13,9 +13,9 @@ RUN apt-get update -y \
 
 # Install jsonnet
 ENV GO111MODULE="on"
-RUN go get github.com/google/go-jsonnet/cmd/jsonnet \
-    && go get github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb \
-    && go get github.com/brancz/gojsontoyaml \
+RUN go install github.com/google/go-jsonnet/cmd/jsonnet@latest \
+    && go install github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@latest \
+    && go install github.com/brancz/gojsontoyaml@latest \
     && rm -rf $GOPATH/{src,pkg}
 
 # Install awscli v2
@@ -26,11 +26,11 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
 
 
 # Install eksctl
-RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp \
+RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/v0.113.0/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp \
     && mv /tmp/eksctl /usr/local/bin
 
 # Install kubectl
-RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl \
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.22.2/bin/linux/amd64/kubectl \
    && chmod +x ./kubectl \
    && mv ./kubectl /usr/local/bin/kubectl
 
@@ -43,7 +43,7 @@ RUN curl -L https://github.com/kubernetes-sigs/kustomize/releases/download/v2.0.
     && chmod +x /usr/local/bin/kustomize
 
 # Install aws-iam-authenticator
-RUN curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.15.10/2020-02-22/bin/linux/amd64/aws-iam-authenticator \
+RUN curl -o aws-iam-authenticator https://s3.us-west-2.amazonaws.com/amazon-eks/1.21.2/2021-07-05/bin/linux/amd64/aws-iam-authenticator \
     && chmod +x ./aws-iam-authenticator \
     && mv ./aws-iam-authenticator /usr/local/bin/
 
